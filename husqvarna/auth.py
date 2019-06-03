@@ -1,4 +1,5 @@
 import requests
+import logging
 
 class Auth:
     base_url = 'https://api.authentication.husqvarnagroup.dev/v1/'
@@ -25,6 +26,7 @@ class Auth:
             'refresh_token': self.app_refresh_token
         }
         
+        logging.debug('POST oauth2/token refresh_token')
         r = requests.post(self.base_url + 'oauth2/token', data=rdata)
         data = r.json()
 
@@ -39,7 +41,8 @@ class Auth:
             'username': username,
             'password': password
         }
-
+        
+        logging.debug('POST oauth2/token password')
         r = requests.post(self.base_url + 'oauth2/token', data=rdata)
         data = r.json()
 

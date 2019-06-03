@@ -1,5 +1,5 @@
+import logging
 import requests
-import pprint
 import time
 from . import auth, mower
 
@@ -27,6 +27,8 @@ class AM:
 
     def api_get(self, endpoint):
         headers = self.auth.headers()
+        logging.debug('GET {0}'.format(endpoint))
+
         r = requests.get(self.base_url + endpoint, headers=headers)
         return r.json()
 
