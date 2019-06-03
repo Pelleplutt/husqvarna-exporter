@@ -1,0 +1,3 @@
+configparser
+prometheus_client
+requests
