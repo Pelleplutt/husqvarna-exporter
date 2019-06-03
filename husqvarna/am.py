@@ -30,6 +30,14 @@ class AM:
         logging.debug('GET {0}'.format(endpoint))
 
         r = requests.get(self.base_url + endpoint, headers=headers)
+
+        if r.status_code == 401: # unauthorized
+            self.auth.refresh_token()
+
+            headers = self.auth.headers()
+            logging.debug('GET {0} (retry)'.format(endpoint))
+            r = requests.get(self.base_url + endpoint, headers=headers)
+ 
         return r.json()
 
     def get(self, endpoint):
