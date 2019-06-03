@@ -1,3 +1,5 @@
+import time
+
 class Mower:
     activities = [ "UNKNOWN", "NOT_APPLICABLE", "MOWING", "GOING_HOME", "CHARGING",  "LEAVING", "PARKED_IN_CS", "STOPPED_IN_GARDEN" ]
     states =  [ "UNKNOWN", "NOT_APPLICABLE", "PAUSED", "IN_OPERATION", "WAIT_UPDATING", "WAIT_POWER_UP", "RESTRICTED", "OFF", "STOPPED", "ERROR", "FATAL_ERROR", "ERROR_AT_POWER_UP" ]
@@ -26,11 +28,14 @@ class Mower:
         self.status_update_ts = data['statusTimestamp'] / 1000
 
     def set_mower(self, data):
-        self.activity = self.activities.index(data['activity'])
+        self.activity = data['activity']
+        self.activity_id = self.activities.index(self.activity)
         self.errorcode = data['errorCode']
         self.errorcode_ts = data['errorCodeTimestamp']
-        self.mode = self.modes.index(data['mode'])
-        self.state = self.states.index(data['state'])
+        self.mode = data['mode']
+        self.mode_id = self.modes.index(self.mode)
+        self.state = data['state']
+        self.state_id = self.states.index(self.state)
 
     def set_planner(self, data):
         self.next_start_ts = data['nextStartTimestamp'] / 1000
@@ -39,3 +44,21 @@ class Mower:
         self.model = data['model']
         self.name = data['name']
         self.serial = data['serialNumber']
+
+    def status_update_age_seconds(self):
+        if self.status_update_ts == 0:
+            return 0
+
+        return max(0, time.time() - self.status_update_ts)
+
+    def errorcode_age_seconds(self):
+        if self.errorcode_ts == 0:
+            return 0
+
+        return max(0, time.time() - self.errorcode_ts)
+
+    def next_start_seconds(self):
+        if self.next_start_ts == 0:
+            return 0
+        return max(0, time.time() - self.next_start_ts)
+        
