@@ -1,13 +1,21 @@
 import requests
 import pprint
+import time
 from . import auth, mower
 
 class AM:
     base_url = 'https://api.amc.husqvarna.dev/v1/'
 
+    # As husqvarna limits the number of requests per month to 10000 we 
+    # need to behave and not overstep that. Kling on to data for at 
+    # least 10000 / 31 / 24 / 60 ~= 224s
+    data_cache_thresold = 300
+
     def __init__(self, app_id, refresh_token):
         self.app_id = app_id
         self.auth = auth.Auth(app_id, refresh_token)
+        self.cache = {}
+        self.cache_age = {}
 
     def api_post_request(self, endpoint, **kwargs):
         data = {}
@@ -22,8 +30,17 @@ class AM:
         r = requests.get(self.base_url + endpoint, headers=headers)
         return r.json()
 
+    def get(self, endpoint):
+        if self.cache_age.get(endpoint) is not None:
+            if time.time() - self.cache_age[endpoint] < self.data_cache_thresold:
+                return self.cache[endpoint]
+
+        self.cache_age[endpoint] = time.time()
+        self.cache[endpoint] = self.api_get(endpoint)
+        return self.cache[endpoint]
+
     def mowers(self):
-        data = self.api_get('mowers')
+        data = self.get('mowers')
         mowers = []
         for m in data['data']:
             mowers.append(mower.Mower(m))
