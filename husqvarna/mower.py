@@ -60,5 +60,5 @@ class Mower:
     def next_start_seconds(self):
         if self.next_start_ts == 0:
             return 0
-        return max(0, time.time() - self.next_start_ts)
+        return max(0, self.next_start_ts - time.time())
         
