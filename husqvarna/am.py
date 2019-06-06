@@ -41,9 +41,8 @@ class AM:
         return r.json()
 
     def get(self, endpoint):
-        if self.cache_age.get(endpoint) is not None:
-            if time.time() - self.cache_age[endpoint] < self.data_cache_thresold:
-                return self.cache[endpoint]
+        if self.cache_age.get(endpoint) is not None and time.time() - self.cache_age[endpoint] < self.data_cache_thresold:
+            return self.cache[endpoint]
 
         self.cache_age[endpoint] = time.time()
         self.cache[endpoint] = self.api_get(endpoint)
