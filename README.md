@@ -22,3 +22,20 @@ docker run --restart unless-stopped \
  --env AM_CONFIG=/app/config/husqvarna-exporter.ini \
  --name husqvarna-exporter
 ```
+
+## Metrics
+
+All mower metrics are exported with labels 'model', 'name' and 'serial' with logical meanings. Name being what you have named your mower once you connected to it. 
+
+Current mower related metrics exporter are:
+- mower_battery_percent gauge:  mower_battery_percent Current battery level
+-  mower_connected gauge:  mower_connected Connected status
+-  mower_status_update_age_seconds gauge:  mower_status_update_age_seconds Seconds since last status update
+-  mower_status_update_ts gauge:  mower_status_update_ts Unix ts of last status update
+-  mower_activity gauge:  mower_activity Current mower activity
+-  mower_errorcode gauge:  mower_errorcode Current errorcode
+-  mower_errorcode_age_seconds gauge:  mower_errorcode_age_seconds Seconds since errorcode was set
+-  mower_errorcode_ts gauge:  mower_errorcode_ts Unix ts of errorcode being set
+-  mower_mode gauge:  mower_mode Current mowing mode
+-  mower_state gauge:  mower_state Current mower state
+-  mower_next_start_seconds gauge:  mower_next_start_seconds Planned number of seconds until next start
