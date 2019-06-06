@@ -8,6 +8,7 @@ from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily, REGIS
 from husqvarna import am, mower, auth
 
 PORT = 9109
+CONFIG_FILE = 'husqvarna-exporter.ini'
 
 class UnifiCollector(object):
     def __init__(self, app_id, refresh_token):
@@ -62,7 +63,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     port = int(os.environ.get('AM_PORT', PORT))
-    configfile = os.environ['AM_CONFIG']
+    configfile = os.environ.get('AM_CONFIG', CONFIG_FILE)
 
     config = configparser.ConfigParser()
     config.read(configfile)
