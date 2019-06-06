@@ -19,24 +19,30 @@ class UnifiCollector(object):
         metrics['mower_battery_percent']            = GaugeMetricFamily('mower_battery_percent',            'Current battery level', labels=['serial', 'name', 'model'])
         metrics['mower_connected']                  = GaugeMetricFamily('mower_connected',                  'Connected status', labels=['serial', 'name', 'model'])
         metrics['mower_status_update_age_seconds']  = GaugeMetricFamily('mower_status_update_age_seconds',  'Seconds since last status update', labels=['serial', 'name', 'model'])
+        metrics['mower_status_update_ts']           = GaugeMetricFamily('mower_status_update_ts',           'Unix ts of last status update', labels=['serial', 'name', 'model'])
         metrics['mower_activity']                   = GaugeMetricFamily('mower_activity',                   'Current mower activity', labels=['serial', 'name', 'model'])
         metrics['mower_errorcode']                  = GaugeMetricFamily('mower_errorcode',                  'Current errorcode', labels=['serial', 'name', 'model'])
         metrics['mower_errorcode_age_seconds']      = GaugeMetricFamily('mower_errorcode_age_seconds',      'Seconds since errorcode was set', labels=['serial', 'name', 'model'])
+        metrics['mower_errorcode_ts']               = GaugeMetricFamily('mower_errorcode_ts',               'Unix ts of errorcode being set', labels=['serial', 'name', 'model'])
         metrics['mower_mode']                       = GaugeMetricFamily('mower_mode',                       'Current mowing mode', labels=['serial', 'name', 'model'])
         metrics['mower_state']                      = GaugeMetricFamily('mower_state',                      'Current mower state', labels=['serial', 'name', 'model'])
         metrics['mower_next_start_seconds']         = GaugeMetricFamily('mower_next_start_seconds',         'Planned number of seconds until next start', labels=['serial', 'name', 'model'])
+        metrics['mower_next_start_ts']              = GaugeMetricFamily('mower_next_start_ts',              'Planned unix ts of next start', labels=['serial', 'name', 'model'])
 
     def add_mower_metrics(self,  metrics, mower):
         labels = [ str(mower.serial), mower.name, mower.model ]
         metrics['mower_battery_percent'].add_metric(labels, int(mower.battery_percent))
         metrics['mower_connected'].add_metric(labels, int(mower.connected))
         metrics['mower_status_update_age_seconds'].add_metric(labels, int(mower.status_update_age_seconds()))
+        metrics['mower_status_update_ts'].add_metric(labels, int(mower.status_update_ts))
         metrics['mower_activity'].add_metric(labels, int(mower.activity_id))
         metrics['mower_errorcode'].add_metric(labels, int(mower.errorcode))
         metrics['mower_errorcode_age_seconds'].add_metric(labels, int(mower.errorcode_age_seconds()))
+        metrics['mower_errorcode_ts'].add_metric(labels, int(mower.errorcode_ts))
         metrics['mower_mode'].add_metric(labels, int(mower.mode_id))
         metrics['mower_state'].add_metric(labels, int(mower.state_id))
         metrics['mower_next_start_seconds'].add_metric(labels, int(mower.next_start_seconds()))
+        metrics['mower_next_start_ts'].add_metric(labels, int(mower.next_start_ts))
 
     def collect(self):
         logging.info('Collect')
