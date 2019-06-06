@@ -5,7 +5,7 @@ import pprint
 import time
 from prometheus_client import start_http_server, Gauge
 from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily, REGISTRY
-from husqvarna import am, mower
+from husqvarna import am, mower, auth
 
 PORT = 9109
 
@@ -59,6 +59,7 @@ class UnifiCollector(object):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
 
     port = int(os.environ.get('AM_PORT', PORT))
     configfile = os.environ['AM_CONFIG']
@@ -67,7 +68,20 @@ if __name__ == '__main__':
     config.read(configfile)
 
     app_id = config['auth']['app_id']
+    if app_id is None or app_id == '':
+        raise ValueError('Missing app_id, generate one at https://developer.1689.cloud')
+
     refresh_token = config['auth']['refresh_token']
+    username = config['auth']['username']
+    password = config['auth']['password']
+
+    if refresh_token is None or refresh_token == '':
+        if username is None or password is None or username == '' or password == '':
+            raise ValueError('Missing refresh_token and username/password')
+        rt_auth = auth.Auth(app_id)
+        rt_data = rt_auth.Login(username, password)
+        refresh_token = rt_data['refresh_token']
+        logging.info('Logged in, fresh_token == {0}, add to config and remove usernane/password'.format(refresh_token))
 
     REGISTRY.register(UnifiCollector(app_id, refresh_token))
     start_http_server(port)
