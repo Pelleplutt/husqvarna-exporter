@@ -1,4 +1,5 @@
 import logging
+import pprint
 import requests
 import time
 from . import auth, mower
@@ -51,8 +52,11 @@ class AM:
     def mowers(self):
         data = self.get('mowers')
         mowers = []
-        for m in data['data']:
-            mowers.append(mower.Mower(m))
+        try:
+            for m in data['data']:
+                mowers.append(mower.Mower(m))
+        except KeyError:
+            logging.debug('No mowers?! {0}'.format(pprint.pformat(data)))
         return mowers
 
 
