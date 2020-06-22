@@ -1,5 +1,6 @@
 import requests
 import logging
+import pprint
 
 class Auth:
     base_url = 'https://api.authentication.husqvarnagroup.dev/v1/'
@@ -30,9 +31,18 @@ class Auth:
         r = requests.post(self.base_url + 'oauth2/token', data=rdata)
         data = r.json()
 
-        self.app_token = data['access_token']
-        self.app_token_type = data['token_type']
-        self.app_token_provider = data['provider']
+        if data.get('error') is not None:
+            logging.error('Refresh token call failed: {} ({})'.format(data.get('error'), data.get('error_description')))
+            raise RuntimeError(data.get('error_description'))
+        else:
+            try:
+                self.app_token = data['access_token']
+                self.app_token_type = data['token_type']
+                self.app_token_provider = data['provider']
+            except KeyError as err:
+                logging.error('Cannot refresh token: {}'.format(err))
+                logging.debug('No good return data when refreshing token {0}'.format(pprint.pformat(data)))
+                raise RuntimeError('Cannot refresh token')
 
     def login(self, username, password):
         rdata = { 
