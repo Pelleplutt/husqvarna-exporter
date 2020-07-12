@@ -12,9 +12,8 @@ class AM:
     # least 10000 / 31 / 24 / 60 ~= 224s
     data_cache_thresold = 300
 
-    def __init__(self, app_id, refresh_token):
-        self.app_id = app_id
-        self.auth = auth.Auth(app_id, refresh_token)
+    def __init__(self, auth):
+        self.auth = auth
         self.cache = {}
         self.cache_age = {}
 

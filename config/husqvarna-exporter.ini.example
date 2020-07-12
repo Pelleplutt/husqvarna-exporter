@@ -1,6 +1,7 @@
 [auth]
+# Obtain app_id on https://developer.1689.cloud , follow the getting started guide to create account and link to the API's
 app_id = 00000000-0000-0000-0000-000000000000
-refresh_token = 00000000-0000-0000-0000-000000000000
+# Username and password is the same as when logging into https://developer.1689.cloud
 username =  foo@bar.com
 password = PASSWORD
 

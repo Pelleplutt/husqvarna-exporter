@@ -1,8 +1,0 @@
-[auth]
-# Obtain app_id on https://developer.1689.cloud , follow the getting started guide to create account and link to the API's
-app_id = APP_ID
-# First usage, set username/password and it will be used for login. 
-# Refresh_token will be logged so you can pick it up and use it. If you can use husqvarna-login command line tool to get it instead
-#username =
-#password =
-refresh_token =  TOKEN

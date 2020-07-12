@@ -11,10 +11,10 @@ PORT = 9109
 CONFIG_FILE = 'husqvarna-exporter.ini'
 
 class UnifiCollector(object):
-    def __init__(self, app_id, refresh_token):
+    def __init__(self, auth):
         logging.info('Startup')
 
-        self.am = am.AM(app_id=app_id, refresh_token=refresh_token)
+        self.am = am.AM(auth)
 
     def setup_mower_metrics(self,  metrics):
         metrics['mower_battery_percent']            = GaugeMetricFamily('mower_battery_percent',            'Current battery level', labels=['serial', 'name', 'model'])
@@ -72,19 +72,15 @@ if __name__ == '__main__':
     if app_id is None or app_id == '':
         raise ValueError('Missing app_id, generate one at https://developer.1689.cloud')
 
-    refresh_token = config['auth']['refresh_token']
+    refresh_token = None
     username = config['auth']['username']
     password = config['auth']['password']
 
-    if refresh_token is None or refresh_token == '':
-        if username is None or password is None or username == '' or password == '':
-            raise ValueError('Missing refresh_token and username/password')
-        rt_auth = auth.Auth(app_id)
-        rt_data = rt_auth.Login(username, password)
-        refresh_token = rt_data['refresh_token']
-        logging.info('Logged in, fresh_token == {0}, add to config and remove usernane/password'.format(refresh_token))
+    if username is None or password is None or username == '' or password == '':
+        raise ValueError('Missing username/password')
+    rt_auth = auth.Auth(app_id, username=username, password=password)
 
-    REGISTRY.register(UnifiCollector(app_id, refresh_token))
+    REGISTRY.register(UnifiCollector(rt_auth))
     start_http_server(port)
     try:
         while True:
