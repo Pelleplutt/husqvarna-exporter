@@ -8,7 +8,7 @@ class Mower:
     def __init__(self, data):
         if data['type'] != 'mower':
             raise ValueError('Not a mower')
-        
+
         self.id = data['id']
         self.set_battery(data['attributes']['battery'])
         self.set_calendar(data['attributes']['calendar'])
@@ -16,13 +16,14 @@ class Mower:
         self.set_mower(data['attributes']['mower'])
         self.set_planner(data['attributes']['planner'])
         self.set_system(data['attributes']['system'])
-        
+
     def set_battery(self, data):
         self.battery_percent = data['batteryPercent']
 
     def set_calendar(self, data):
+        # TODO When we see a use for it, add this body
         pass
-    
+
     def set_metadata(self, data):
         self.connected = 1 if data['connected'] else 0
         self.status_update_ts = data['statusTimestamp'] / 1000
