@@ -29,7 +29,12 @@ class AM:
         headers = self.auth.headers()
         logging.debug('GET {0}'.format(endpoint))
 
-        r = requests.get(self.base_url + endpoint, headers=headers)
+        try:
+            r = requests.get(self.base_url + endpoint, headers=headers)
+        except ConnectionError as e:
+            logging.error('Cannot call endpoint "{0}": {1}'.format(endpoint, err))
+            logging.debug('Exception when calling endpoint {0}'.format(pprint.pformat(data)))
+            return None
 
         if r.status_code == 401: # unauthorized
             self.auth.refresh_token()
