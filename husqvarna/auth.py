@@ -48,7 +48,7 @@ class Auth:
             self.app_token_type = data['token_type']
             self.app_token_provider = data['provider']
         except KeyError as err:
-            logging.error('Cannot refresh token: {}'.format(err))
+            logging.error('Cannot refresh token: {0}'.format(err))
             logging.debug('No good return data when refreshing token {0}'.format(pprint.pformat(data)))
             raise RuntimeError('Cannot refresh token')
 
