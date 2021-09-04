@@ -31,7 +31,7 @@ class AM:
 
         try:
             r = requests.get(self.base_url + endpoint, headers=headers)
-        except ConnectionError as e:
+        except (requests.exceptions.ConnectionError, BrokenPipeError, urllib3.exceptions.MaxRetryError) as e:
             logging.error('Cannot call endpoint "{0}": {1}'.format(endpoint, err))
             logging.debug('Exception when calling endpoint {0}'.format(pprint.pformat(data)))
             return None
