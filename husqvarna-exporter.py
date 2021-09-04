@@ -67,7 +67,8 @@ class UnifiCollector(object):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    loglevel = os.environ.get('LOGLEVEL', 'INFO').upper()
+    logging.basicConfig(level=loglevel)
 
     port = int(os.environ.get('AM_PORT', PORT))
     configfile = os.environ.get('AM_CONFIG', CONFIG_FILE)
