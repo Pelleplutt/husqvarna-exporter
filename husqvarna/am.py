@@ -51,6 +51,7 @@ class AM:
 
         self.cache_age[endpoint] = time.time()
         self.cache[endpoint] = self.api_get(endpoint)
+        logging.debug(f'Refreshed endpoint {endpoint}: {format(pprint.pformat(self.cache[endpoint]))}')
         return self.cache[endpoint]
 
     def mowers(self):
@@ -60,7 +61,7 @@ class AM:
             for m in data['data']:
                 mowers.append(mower.Mower(m))
         except KeyError:
-            logging.debug('No mowers?! {0}'.format(pprint.pformat(data)))
+            logging.warning('No mower information in response?! {0}'.format(pprint.pformat(data)))
         return mowers
 
 
