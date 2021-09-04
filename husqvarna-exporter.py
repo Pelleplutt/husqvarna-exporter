@@ -49,18 +49,21 @@ class UnifiCollector(object):
         logging.info('Collect')
         metrics = {}
 
+        metric_count = 0
+        mower_count = 0
+
         self.setup_mower_metrics(metrics)
         mowers = self.am.mowers()
         if mowers is not None:
             for mower in mowers:
+                mower_count += 1
                 self.add_mower_metrics(metrics, mower)
 
             for key, val in metrics.items():
+                metric_count += 1
                 yield val
-        else:
-            logging.info('No mowers')
 
-        logging.info('Collect done')
+        logging.info(f'Collect done, {mower_count} mowers, {metric_count} metrics')
 
 
 if __name__ == '__main__':
