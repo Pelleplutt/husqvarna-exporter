@@ -36,7 +36,8 @@ class AM:
             logging.debug('Exception when calling endpoint {0}'.format(pprint.pformat(data)))
             return None
 
-        if r.status_code == 401: # unauthorized
+            # unauthorized / forbidden
+        if r.status_code == 401 or r.status_code == 403: 
             self.auth.refresh_token()
 
             headers = self.auth.headers()
