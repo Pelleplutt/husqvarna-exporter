@@ -50,8 +50,9 @@ class AM:
         if self.cache_age.get(endpoint) is not None and time.time() - self.cache_age[endpoint] < self.data_cache_thresold:
             return self.cache[endpoint]
 
-        self.cache_age[endpoint] = time.time()
+        self.cache[endpoint] = None
         self.cache[endpoint] = self.api_get(endpoint)
+        self.cache_age[endpoint] = time.time()
         logging.debug(f'Refreshed endpoint {endpoint}: {format(pprint.pformat(self.cache[endpoint]))}')
         return self.cache[endpoint]
 
